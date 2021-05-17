@@ -20,3 +20,23 @@ card(name="vortexwing", strength=19, speed=13, stealth=19, cunning=2)
 card(name="rotthing", strength=16, speed=7, stealth=4, cunning=12)
 card(name="froststep", strength=14, speed=14, stealth=17, cunning=4)
 card(name="wispghoul", strength=17, speed=19, stealth=3, cunning=2)
+
+
+def error_check(type):
+    if type == None:
+        raise SystemExit
+    return type
+
+
+choice = error_check(ui.buttonbox("What do you want to do?", title="Choice",
+                                  choices=["Add new card", "Search for a card", "Delete a card", "View the full deck"]))
+if choice=="Add new card":
+    name=error_check(ui.enterbox("What is the name of your monster?", title="Name"))
+    while True:
+        stats=error_check(ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", ["Strength","Speed","Stealth","Cunning"]))
+if choice=="Search for a card":
+    None
+if choice=="Delete a card":
+    None
+if choice=="View the full deck":
+    None
