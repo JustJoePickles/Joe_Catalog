@@ -28,15 +28,38 @@ def error_check(type):
     return type
 
 
+stats = ["Strength", "Speed", "Stealth", "Cunning"]
+
 choice = error_check(ui.buttonbox("What do you want to do?", title="Choice",
                                   choices=["Add new card", "Search for a card", "Delete a card", "View the full deck"]))
-if choice=="Add new card":
-    name=error_check(ui.enterbox("What is the name of your monster?", title="Name"))
-    while True:
-        stats=error_check(ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", ["Strength","Speed","Stealth","Cunning"]))
-if choice=="Search for a card":
+if choice == "Add new card":
+    name = error_check(ui.enterbox("What is the name of your monster?", title="Name"))
+    card_stats = error_check(
+        ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
+    while 1:
+        all_clear = "yes"
+        for i in range(0, len(card_stats)):
+            try:
+                int(card_stats[i])
+                if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:
+                    print(0 / 0)
+
+            except:
+                error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid input\n"
+                                                                                      "Try an integer, or make sure "
+                                                                                      "it is between 1 and 25",
+                                      title="Invalid input"))
+                replacement_stat = error_check(
+                    ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
+                                  upperbound=25, lowerbound=1))
+                card_stats[i] = replacement_stat
+                all_clear = "no"
+        if all_clear == "yes":
+            break
+
+if choice == "Search for a card":
     None
-if choice=="Delete a card":
+if choice == "Delete a card":
     None
-if choice=="View the full deck":
+if choice == "View the full deck":
     None
