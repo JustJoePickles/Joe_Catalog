@@ -2,12 +2,15 @@ import easygui as ui
 
 
 class card:
+    instances = []
+
     def __init__(self, name, strength, speed, stealth, cunning):
         self.name = name
         self.strength = strength
         self.speed = speed
         self.stealth = stealth
         self.cunning = cunning
+        self.__class__.instances.append(self)
 
 
 card(name="stoneling", strength=7, speed=1, stealth=25, cunning=15)
@@ -29,37 +32,43 @@ def error_check(type):
 
 
 stats = ["Strength", "Speed", "Stealth", "Cunning"]
+while 1:
+    choice = error_check(ui.buttonbox("What do you want to do?", title="Choice",
+                                      choices=["Add new card", "Search for a card", "Delete a card", "View the full deck"]))
+    if choice == "Add new card":
+        name = error_check(ui.enterbox("What is the name of your monster?", title="Name"))
+        card_stats = error_check(
+            ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
+        while 1:
+            all_clear = "yes"
+            for i in range(0, len(card_stats)):
+                try:
+                    int(card_stats[i])
+                    if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:
+                        print(0 / 0)
 
-choice = error_check(ui.buttonbox("What do you want to do?", title="Choice",
-                                  choices=["Add new card", "Search for a card", "Delete a card", "View the full deck"]))
-if choice == "Add new card":
-    name = error_check(ui.enterbox("What is the name of your monster?", title="Name"))
-    card_stats = error_check(
-        ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
-    while 1:
-        all_clear = "yes"
-        for i in range(0, len(card_stats)):
-            try:
-                int(card_stats[i])
-                if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:
-                    print(0 / 0)
+                except:
+                    error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid input\n"
+                                                                                          "Try an integer, or make sure "
+                                                                                          "it is between 1 and 25",
+                                          title="Invalid input"))
+                    replacement_stat = error_check(
+                        ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
+                                      upperbound=25, lowerbound=1))
+                    card_stats[i] = replacement_stat
+                    all_clear = "no"
+            if all_clear == "yes":
+                card(name=name, strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2], cunning=card_stats[3])
+                break
 
-            except:
-                error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid input\n"
-                                                                                      "Try an integer, or make sure "
-                                                                                      "it is between 1 and 25",
-                                      title="Invalid input"))
-                replacement_stat = error_check(
-                    ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
-                                  upperbound=25, lowerbound=1))
-                card_stats[i] = replacement_stat
-                all_clear = "no"
-        if all_clear == "yes":
-            break
-
-if choice == "Search for a card":
-    None
-if choice == "Delete a card":
-    None
-if choice == "View the full deck":
-    None
+    if choice == "Search for a card":
+        None
+    if choice == "Delete a card":
+        None
+    if choice == "View the full deck":
+        full_card_deck = []
+        for monster in card.instances:
+            full_card_deck.extend(
+                [monster.name.title(), ":\n\nStrength: ", str(monster.strength), "\nSpeed: ", str(monster.speed),
+                 "\nStealth: ", str(monster.stealth), "\nCunning: ", str(monster.cunning),"\n\n\n"])
+        ui.codebox(msg="The entire deck", text="".join(full_card_deck))
