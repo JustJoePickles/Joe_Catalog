@@ -31,8 +31,8 @@ class card:  # This is the class that will store the stats for every card
         # giving a sorted list of just the card objects
 
     def return_stats(self):  # Function used to print formatted stats for a card
-        return [self.name.title(), ":\n\nStrength: ", str(self.strength), "\nSpeed: ", str(self.speed),
-                "\nStealth: ", str(self.stealth), "\nCunning: ", str(self.cunning), "\n\n\n"]  # returns the formatted
+        return [self.name.title(), ":\n\nStrength: ", str(self.strength), "\nSpeed:    ", str(self.speed),
+                "\nStealth:  ", str(self.stealth), "\nCunning:  ", str(self.cunning), "\n\n\n"]  # returns the formatted
         # output for a given object (self)
 
 
@@ -128,9 +128,9 @@ while 1:  # The main body of code, this loop will run until the user exits the p
             if all_clear == "yes":  # If there were no invalid inputs (otherwise the loop will return to the beginning)
                 add_to_deck = error_check(ui.buttonbox(  # Presents the user their card and checks what they want to
                     # do with it
-                    "".join(["Here is your card:\n", name.title(), ":\nStrength: ", str(card_stats[0]), "\nSpeed: ",
+                    "".join(["Here is your card:\n", name.title(), ":\nStrength: ", str(card_stats[0]), "\nSpeed:    ",
                              str(card_stats[1]),
-                             "\nStealth: ", str(card_stats[2]), "\nCunning: ", str(card_stats[3]),
+                             "\nStealth:  ", str(card_stats[2]), "\nCunning:  ", str(card_stats[3]),
                              "\n\nWould you like to add it to the deck or edit the values"]),
                     choices=["Add to deck", "Edit", "Discard"]))
                 if add_to_deck == "Add to deck":  # As add_card is already "yes", this just breaks out of the loop
@@ -170,9 +170,9 @@ while 1:  # The main body of code, this loop will run until the user exits the p
                 if all_clear == "yes":
                     add_to_deck = error_check(ui.buttonbox(
                         "".join(["Here is your card:\n", user_card.name.title(), ":\nStrength: ", str(card_stats[0]),
-                                 "\nSpeed: ",
+                                 "\nSpeed:    ",
                                  str(card_stats[1]),
-                                 "\nStealth: ", str(card_stats[2]), "\nCunning: ", str(card_stats[3]),
+                                 "\nStealth:  ", str(card_stats[2]), "\nCunning:  ", str(card_stats[3]),
                                  "\n\nWould you like to update it or edit the values"]),
                         choices=["Update", "Edit", "Discard"]))
                     if add_to_deck == "Update":  # Note "Update" instead of "Add card"
