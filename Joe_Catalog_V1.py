@@ -11,6 +11,7 @@ class card:
         self.stealth = stealth
         self.cunning = cunning
         self.__class__.instances.append(self)
+        [f.name.title() for f in self.__class__.instances].sort()
 
     def return_stats(self):
         return [self.name.title(), ":\n\nStrength: ", str(self.strength), "\nSpeed: ", str(self.speed),
@@ -35,11 +36,37 @@ def error_check(type):
     return type
 
 
+def edit_card():
+    card_stats = error_check(
+        ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
+    all_clear = "no"
+    while all_clear == "no":
+        all_clear = "yes"
+        for i in range(0, len(card_stats)):
+            try:
+                int(card_stats[i])
+                if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:
+                    print(0 / 0)
+
+            except:
+                error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid "
+                                                                                      "input\nTry an integer,"
+                                                                                      " or make sure it is "
+                                                                                      "between 1 and 25",
+                                      title="Invalid input"))
+                replacement_stat = error_check(
+                    ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
+                                  upperbound=25, lowerbound=1))
+                error_check(ui.msgbox("Input accepted", title="Accepted"))
+                card_stats[i] = replacement_stat
+                all_clear = "no"
+    return card_stats, all_clear
+
+
 stats = ["Strength", "Speed", "Stealth", "Cunning"]
 while 1:
     choice = error_check(ui.buttonbox("What do you want to do?", title="Choice",
-                                      choices=["Add new card", "Search for a card", "Delete a card",
-                                               "View the full deck"]))
+                                      choices=["Add new card", "Search for a card", "View the full deck"]))
     if choice == "Add new card":
         while 1:
             name = error_check(ui.enterbox("What is the name of your monster?", title="Name"))
@@ -47,31 +74,11 @@ while 1:
                 ui.msgbox("Please enter a name")
             else:
                 break
-
+        add_card = "yes"
         while 1:
-            card_stats = error_check(
-                ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
-            all_clear = "no"
-            add_card = "yes"
-            while all_clear == "no":
-                all_clear = "yes"
-                for i in range(0, len(card_stats)):
-                    try:
-                        int(card_stats[i])
-                        if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:
-                            print(0 / 0)
-
-                    except:
-                        error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid "
-                                                                                              "input\nTry an integer,"
-                                                                                              " or make sure it is "
-                                                                                              "between 1 and 25",
-                                              title="Invalid input"))
-                        replacement_stat = error_check(
-                            ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
-                                          upperbound=25, lowerbound=1))
-                        card_stats[i] = replacement_stat
-                        all_clear = "no"
+            variableconvertor = edit_card()
+            all_clear = variableconvertor[1]
+            card_stats = variableconvertor[0]
             if all_clear == "yes":
                 add_to_deck = error_check(ui.buttonbox(
                     "".join(["Here is your card:\n", name.title(), ":\nStrength: ", str(card_stats[0]), "\nSpeed: ",
@@ -86,21 +93,47 @@ while 1:
                     break
 
         if add_card == "yes":
-            card(name=name, strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2], cunning=card_stats[3])
+            card(name=name.lower(), strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2],
+                 cunning=card_stats[3])
 
     if choice == "Search for a card":
         card_search = error_check(ui.choicebox("Select the card you want to view", title="Card Search",
                                                choices=[f.name.title() for f in card.instances]))
         user_card = card.instances[[f.name for f in card.instances].index(card_search.lower())]
-        option = error_check(ui.buttonbox("Here is your card, what do you want to do?\n\n" + "".join(card.return_stats(user_card)),
-                              choices=["Edit", "Delete", "Continue"], title=user_card.name.title()))
-        if option=="Edit":
-            None
-        if option=="Delete":
-            None
+        print(user_card)
+        option = error_check(
+            ui.buttonbox("Here is your card, what do you want to do?\n\n" + "".join(card.return_stats(user_card)),
+                         choices=["Continue", "Edit", "Delete"], title=user_card.name.title()))
+        if option == "Edit":
+            add_card = "yes"
+            while 1:
+                variableconvertor = edit_card()
+                all_clear = variableconvertor[1]
+                card_stats = variableconvertor[0]
+                if all_clear == "yes":
+                    add_to_deck = error_check(ui.buttonbox(
+                        "".join(["Here is your card:\n", user_card.name.title(), ":\nStrength: ", str(card_stats[0]),
+                                 "\nSpeed: ",
+                                 str(card_stats[1]),
+                                 "\nStealth: ", str(card_stats[2]), "\nCunning: ", str(card_stats[3]),
+                                 "\n\nWould you like to update it or edit the values"]),
+                        choices=["Update", "Edit", "Discard"]))
+                    if add_to_deck == "Update":
+                        break
+                    if add_to_deck == "Discard":
+                        add_card = "no"
+                        card.instances.remove(user_card)
+                        error_check(ui.msgbox(user_card.name.title() + " removed"))
+                        break
 
-    if choice == "Delete a card":
-        None
+            if add_card == "yes":
+                card(name=user_card.name.lower(), strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2],
+                     cunning=card_stats[3])
+
+        if option == "Delete":
+            card.instances.remove(user_card)
+            error_check(ui.msgbox(user_card.name.title() + " removed"))
+
     if choice == "View the full deck":
         full_card_deck = []
         for monster in card.instances:
