@@ -11,7 +11,8 @@ class card:
         self.stealth = stealth
         self.cunning = cunning
         self.__class__.instances.append(self)
-        [f.name.title() for f in self.__class__.instances].sort()
+        X=[f.name for f in self.__class__.instances]
+        self.__class__.instances=[x for _, x in sorted(zip(X, self.__class__.instances))]
 
     def return_stats(self):
         return [self.name.title(), ":\n\nStrength: ", str(self.strength), "\nSpeed: ", str(self.speed),
@@ -71,7 +72,7 @@ while 1:
         while 1:
             name = error_check(ui.enterbox("What is the name of your monster?", title="Name"))
             if name == "":
-                ui.msgbox("Please enter a name")
+                error_check(ui.msgbox("Please enter a name"))
             else:
                 break
         add_card = "yes"
@@ -100,7 +101,6 @@ while 1:
         card_search = error_check(ui.choicebox("Select the card you want to view", title="Card Search",
                                                choices=[f.name.title() for f in card.instances]))
         user_card = card.instances[[f.name for f in card.instances].index(card_search.lower())]
-        print(user_card)
         option = error_check(
             ui.buttonbox("Here is your card, what do you want to do?\n\n" + "".join(card.return_stats(user_card)),
                          choices=["Continue", "Edit", "Delete"], title=user_card.name.title()))
@@ -127,6 +127,7 @@ while 1:
                         break
 
             if add_card == "yes":
+                card.instances.remove(user_card)
                 card(name=user_card.name.lower(), strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2],
                      cunning=card_stats[3])
 
