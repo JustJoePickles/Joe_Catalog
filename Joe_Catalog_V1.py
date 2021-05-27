@@ -12,6 +12,10 @@ class card:
         self.cunning = cunning
         self.__class__.instances.append(self)
 
+    def return_stats(self):
+        return [self.name.title(), ":\n\nStrength: ", str(self.strength), "\nSpeed: ", str(self.speed),
+                "\nStealth: ", str(self.stealth), "\nCunning: ", str(self.cunning), "\n\n\n"]
+
 
 card(name="stoneling", strength=7, speed=1, stealth=25, cunning=15)
 card(name="vexscream", strength=1, speed=6, stealth=21, cunning=19)
@@ -26,7 +30,7 @@ card(name="wispghoul", strength=17, speed=19, stealth=3, cunning=2)
 
 
 def error_check(type):
-    if type == None:
+    if type is None:
         raise SystemExit
     return type
 
@@ -58,7 +62,7 @@ while 1:
                             print(0 / 0)
 
                     except:
-                        error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + "is not valid "
+                        error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid "
                                                                                               "input\nTry an integer,"
                                                                                               " or make sure it is "
                                                                                               "between 1 and 25",
@@ -85,13 +89,20 @@ while 1:
             card(name=name, strength=card_stats[0], speed=card_stats[1], stealth=card_stats[2], cunning=card_stats[3])
 
     if choice == "Search for a card":
-        None
+        card_search = error_check(ui.choicebox("Select the card you want to view", title="Card Search",
+                                               choices=[f.name.title() for f in card.instances]))
+        user_card = card.instances[[f.name for f in card.instances].index(card_search.lower())]
+        option = error_check(ui.buttonbox("Here is your card, what do you want to do?\n\n" + "".join(card.return_stats(user_card)),
+                              choices=["Edit", "Delete", "Continue"], title=user_card.name.title()))
+        if option=="Edit":
+            None
+        if option=="Delete":
+            None
+
     if choice == "Delete a card":
         None
     if choice == "View the full deck":
         full_card_deck = []
         for monster in card.instances:
-            full_card_deck.extend(
-                [monster.name.title(), ":\n\nStrength: ", str(monster.strength), "\nSpeed: ", str(monster.speed),
-                 "\nStealth: ", str(monster.stealth), "\nCunning: ", str(monster.cunning), "\n\n\n"])
+            full_card_deck.extend(card.return_stats(monster))
         error_check(ui.codebox(msg="The entire deck", text="".join(full_card_deck)))
