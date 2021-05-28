@@ -64,8 +64,8 @@ def error_check(type):  # Very important error checking function, used whenever 
 
 
 def edit_card():  # Edit/create card stats, used in two places hence the function
-    UPPERBOUND=25  # Using constants rather than literals makes the program more readily adaptable
-    LOWERBOUND=1
+    UPPERBOUND = 25  # Using constants rather than literals makes the program more readily adaptable
+    LOWERBOUND = 1
     card_stats = error_check(  # Gives the user multiple boxes to enter the respective stats into
         ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
     all_clear = "no"  # all_clear records whether the user has entered an invalid input ("yes" means no issues)
@@ -84,9 +84,9 @@ def edit_card():  # Edit/create card stats, used in two places hence the functio
                 error_check(ui.msgbox("A " + stats[i] + " of " + str(card_stats[i]) + " is not valid "
                                                                                       "input\nTry an integer,"
                                                                                       " or make sure it is "
-                                                                                      "between 1 and 25",
-                                      title="Invalid input"))  # Shows the user the invalid input and some potential
-                # issues
+                                                                                      "between " + str(
+                    LOWERBOUND) + " and " + str(UPPERBOUND), title="Invalid input"))  # Shows the user the invalid
+                # input and some potential issues
                 replacement_stat = error_check(  # This stat will replace the incorrect input for when the card()
                     # object is created
                     ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
@@ -111,7 +111,7 @@ while 1:  # The main body of code, this loop will run until the user exits the p
                                       # the user pick which of the program's features to use
                                       choices=["Add new card", "Search for a card", "View the full deck"]))
 
-########################################################################################################################
+    ########################################################################################################################
 
     if choice == "Add new card":  # Adds a new card using - in part - the edit_card function from earlier
         while 1:  # Loops to ensure the user doesn't leave the name field blank
@@ -151,7 +151,7 @@ while 1:  # The main body of code, this loop will run until the user exits the p
                  cunning=card_stats[3])  # Create a card() object with the relevant stats attached to the relevant
             # properties
 
-########################################################################################################################
+    ########################################################################################################################
 
     if choice == "Search for a card":  # Allows the user to find a specific card in the deck and edit as appropriate
         card_search = error_check(ui.choicebox("Select the card you want to view", title="Card Search",
@@ -199,8 +199,7 @@ while 1:  # The main body of code, this loop will run until the user exits the p
             card.instances.remove(user_card)
             error_check(ui.msgbox(user_card.name.title() + " removed"))
 
-
-########################################################################################################################
+    ########################################################################################################################
 
     if choice == "View the full deck":  # Outputs the entire deck to an easygui window
         full_card_deck = []  # This list contains all the individually formatted card display messages
@@ -209,6 +208,5 @@ while 1:  # The main body of code, this loop will run until the user exits the p
             # add it to the full_card_deck list
         error_check(ui.codebox(msg="The entire deck", text="".join(full_card_deck)))  # Outputs the entire deck in a
         # code box (scrollable and with a header)
-
 
 ########################################################################################################################
