@@ -64,6 +64,8 @@ def error_check(type):  # Very important error checking function, used whenever 
 
 
 def edit_card():  # Edit/create card stats, used in two places hence the function
+    UPPERBOUND=25  # Using constants rather than literals makes the program more readily adaptable
+    LOWERBOUND=1
     card_stats = error_check(  # Gives the user multiple boxes to enter the respective stats into
         ui.multenterbox("Enter the stats of your monster (Max is 25 for each stat)", "Stats", stats))
     all_clear = "no"  # all_clear records whether the user has entered an invalid input ("yes" means no issues)
@@ -73,8 +75,8 @@ def edit_card():  # Edit/create card stats, used in two places hence the functio
             # stats are stored as a list)
             try:  # If an error is raised, the users input is invalid and will move to the except loop
                 int(card_stats[i])  # Test if the values are integers
-                if 1 > int(card_stats[i]) or int(card_stats[i]) > 25:  # Boundary testing for if stat is within the
-                    # required range (from 1=>25)
+                if LOWERBOUND > int(card_stats[i]) or int(card_stats[i]) > UPPERBOUND:  # Boundary testing for if
+                    # stat is within the required range (from 1=>25)
                     print(0 / 0)  # This is just used to raise an error message and move to the except, will only run
                     # if the user's input exceeds the bounds (could also use raise SystemError)
 
@@ -88,8 +90,8 @@ def edit_card():  # Edit/create card stats, used in two places hence the functio
                 replacement_stat = error_check(  # This stat will replace the incorrect input for when the card()
                     # object is created
                     ui.integerbox("Please enter a new value for " + stats[i], title="Replacement Value",
-                                  upperbound=25, lowerbound=1))  # Using an integer box ensures the user has to enter
-                # an integer, the upper and lowerbounds ensures the input fits in the required range.
+                                  upperbound=UPPERBOUND, lowerbound=LOWERBOUND))  # Using an integer box ensures the
+                # user has to enter an integer, the upper and lowerbounds ensures the input fits in the required range.
                 # As such, the user's input will always be valid after this step
                 error_check(ui.msgbox("Input accepted", title="Accepted"))  # let's the user know they entered a valid
                 # input; improves user experience when there are multiple incorrect stats
